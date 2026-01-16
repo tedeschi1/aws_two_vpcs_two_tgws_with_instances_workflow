@@ -1,0 +1,67 @@
+name: 'Terraform Deploy'
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      terraform_action:
+        description: 'Action to perform (apply/destroy)'
+        required: true
+        default: 'apply'
+        type: choice
+        options:
+          - apply
+          - destroy
+  pull_request:
+
+permissions:
+  contents: read
+  id-token: write # Required for requesting the JWT
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+      
+    defaults:
+      run:
+        working-directory: ./aws-vpcs-instances-tgws
+        
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Run Terrascan
+      id: terrascan
+      uses: tenable/terrascan-action@main
+      with:
+        iac_type: 'terraform'
+        policy_type: 'aws'
+        only_warn: false # Set to false to block deployment if violations are found
+        sarif_upload: true
+        iac_dir: ./aws-vpcs-instances-tgws
+
+     # Authenticate to AWS using OIDC
+    - name: 'Authenticate to AWS'
+      uses: 'aws-actions/configure-aws-credentials@v4'
+      with:
+        role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+        aws-region: us-east-1
+   
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+
+    - name: Terraform Init
+      run: terraform init -backend-config="bucket=${{ vars.S3_STATE_BUCKET }}"
+
+    - name: Terraform Plan
+      run: terraform plan -input=false
+
+    - name: Terraform Action
+      # Logic to choose between Apply and Destroy
+      run: |
+        if [ "${{ github.event.inputs.terraform_action }}" == "destroy" ]; then
+          terraform destroy -auto-approve
+        else
+          terraform apply -auto-approve
+        fi
