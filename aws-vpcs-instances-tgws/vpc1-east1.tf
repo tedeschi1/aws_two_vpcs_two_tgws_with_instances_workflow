@@ -32,7 +32,7 @@ resource "aws_route_table" "vpc1_east1_public_rtb" {
         Name = "vpc1_east1_public_rtb"
     }
 
-    depends_on = [ aws_internet_gateway.vpc1_east1_igw ]
+    depends_on = [time_sleep.wait_for_network_mesh]
 }
 
 resource "aws_internet_gateway" "vpc1_east1_igw" {
