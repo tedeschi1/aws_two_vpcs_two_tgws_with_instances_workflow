@@ -11,7 +11,7 @@ data "aws_ami" "linux_ec2_east_1" {
 resource "aws_instance" "east_1_ec2" {
   ami           = data.aws_ami.linux_ec2_east_1.id
   instance_type = "t3.micro"
-  #When using "for_each to create subnets you must specify single subnet ID like below"
+  #When using "for_each" to create subnets you must specify single subnet ID like below
   subnet_id     = aws_subnet.vpc1_east1_subnets["vpc1_subnet1"].id
   associate_public_ip_address = true
   vpc_security_group_ids = [aws_security_group.vpc1_east1_sg.id]
