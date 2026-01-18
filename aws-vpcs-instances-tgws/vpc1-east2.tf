@@ -41,6 +41,7 @@ resource "aws_route_table" "vpc1_east2_public_rtb" {
     route {
         cidr_block = "10.1.0.0/21"
         gateway_id = aws_ec2_transit_gateway.us_east2_hub.id
+        depends_on = [time_sleep.wait_for_network_mesh]
     }
 
     tags = {

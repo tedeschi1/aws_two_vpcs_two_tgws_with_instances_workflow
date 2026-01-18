@@ -23,6 +23,7 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "vpc1_east1" {
 
 resource "aws_ec2_transit_gateway_route" "to_vpc1_east2_tgw" {
   destination_cidr_block         = "10.3.0.0/21" # East-2 CIDR's
+  depends_on                     = [time_sleep.wait_for_network_mesh]
   transit_gateway_attachment_id  = aws_ec2_transit_gateway_peering_attachment.tgw_peering.id
   transit_gateway_route_table_id = aws_ec2_transit_gateway.us_east1_hub.propagation_default_route_table_id
   depends_on = [ time_sleep.wait_for_tgw_attachment_east2 ]
