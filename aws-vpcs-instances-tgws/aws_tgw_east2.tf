@@ -20,6 +20,8 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "vpc1_east2" {
   tags = {
     Name = "vpc1-east2-attachment"
   }
+
+  depends_on = [ aws_ec2_transit_gateway.us_east2_hub]
 }
 
 resource "aws_ec2_transit_gateway_route" "to_vpc1_east1_tgw" {
@@ -27,6 +29,7 @@ resource "aws_ec2_transit_gateway_route" "to_vpc1_east1_tgw" {
   provider = aws.east2
   transit_gateway_attachment_id  = aws_ec2_transit_gateway_peering_attachment.tgw_peering.id
   transit_gateway_route_table_id = aws_ec2_transit_gateway.us_east2_hub.propagation_default_route_table_id
+  
   depends_on = [ aws_ec2_transit_gateway.us_east2_hub ]
 }
 
