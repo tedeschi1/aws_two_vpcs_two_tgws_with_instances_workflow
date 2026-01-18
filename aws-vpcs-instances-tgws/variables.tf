@@ -16,5 +16,5 @@ variable "vpc2_east1_subnet_cidrs" {
 
 variable "vpc1_east2_subnet_cidrs" {
   type = list(string)
-  default = ["10.3.0.0/24", "10.3.1.0/24"]
+  default = ["10.3.0.0/24", "10.3.1.0/24", "10.3.2.0/24"]
 }
