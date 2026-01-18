@@ -15,7 +15,6 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "vpc1_east1" {
   subnet_ids         = [aws_subnet.vpc1_east1_subnets["vpc1_subnet1"].id, aws_subnet.vpc1_east1_subnets["vpc1_subnet2"].id]
   transit_gateway_id = aws_ec2_transit_gateway.us_east1_hub.id
   vpc_id             = aws_vpc.vpc1_east1.id
-  depends_on = [ time_sleep.wait_for_tgw_attachment_east1 ]
 
   tags = {
     Name = "vpc1-east1-vpc-attachment"
