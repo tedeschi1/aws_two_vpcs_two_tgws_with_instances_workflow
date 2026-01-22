@@ -10,7 +10,7 @@ data "aws_ami" "linux_ec2_east_1" {
 
 resource "aws_instance" "east_1_ec2" {
   ami           = data.aws_ami.linux_ec2_east_1.id
-  for_each      = toset(["web1", "web2", "web3"])
+  for_each      = toset(["web1", "web2"])
   instance_type = "t3.micro"
   #When using "for_each" to create subnets you must specify single subnet ID like below
   subnet_id     = aws_subnet.vpc1_east1_subnets["vpc1_subnet1"].id
